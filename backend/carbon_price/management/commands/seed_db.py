@@ -57,12 +57,15 @@ class Command(BaseCommand):
             if base_price < 60: base_price = 60.0 
             market_data_instances.append(MarketForecast(source="historical", date=d, price=round(base_price, 2)))
 
-        # Forecasts (10 years)
+        # Forecasts (10 years) — exact quarter-start dates so Jan ticks align
+        quarter_months = [1, 4, 7, 10]
         analysts = {'analyst_bnef': 0.6, 'analyst_refinitiv': 0.1, 'analyst_internal': -0.3}
         for analyst, trend in analysts.items():
             price = base_price
             for quarter in range(40):
-                d = current_date + timedelta(days=quarter*90)
+                year = current_date.year + quarter // 4
+                month = quarter_months[quarter % 4]
+                d = date(year, month, 1)
                 price += trend + random.uniform(-1.5, 2.0)
                 market_data_instances.append(MarketForecast(source=analyst, date=d, price=round(price, 2)))
 
@@ -70,7 +73,25 @@ class Command(BaseCommand):
 
         # 4. Create Assumptions (Mixing users to make it realistic)
         self.stdout.write("Generating Assumptions and Audit Logs...")
-        
+
+        # 2025 Active assumptions (needed for year-rollover: avg = €83.75)
+        CompanyAssumption.objects.create(
+            company=company, period="2025-Q1", price=80.00, status="ACTIVE",
+            requested_by=member2, approved_by=admin2
+        )
+        CompanyAssumption.objects.create(
+            company=company, period="2025-Q2", price=82.50, status="ACTIVE",
+            requested_by=admin1, approved_by=admin1
+        )
+        CompanyAssumption.objects.create(
+            company=company, period="2025-Q3", price=85.00, status="ACTIVE",
+            requested_by=member1, approved_by=admin2
+        )
+        CompanyAssumption.objects.create(
+            company=company, period="2025-Q4", price=87.50, status="ACTIVE",
+            requested_by=member2, approved_by=admin1
+        )
+
         # Active Request 1: Mark requested, Michael (Admin) approved
         CompanyAssumption.objects.create(
             company=company, period="2026-Q1", price=84.00, status="ACTIVE",
@@ -96,6 +117,12 @@ class Command(BaseCommand):
         )
 
         # 5. Populate the Audit Log
+        # 2025 audit entries
+        AuditLog.objects.create(company=company, user=member2, action="SUBMITTED_DRAFT", details="Mark Becker requested to set 2025-Q1 price to €80.00")
+        AuditLog.objects.create(company=company, user=admin2, action="APPROVED", details="Michael Scott approved 2025-Q1 price at €80.00")
+        AuditLog.objects.create(company=company, user=member1, action="SUBMITTED_DRAFT", details="Julia Bauer requested to set 2025-Q3 price to €85.00")
+        AuditLog.objects.create(company=company, user=admin1, action="APPROVED", details="Sarah Connor approved 2025-Q3 price at €85.00")
+        # 2026 audit entries
         AuditLog.objects.create(company=company, user=member2, action="SUBMITTED_DRAFT", details="Mark Becker requested to set 2026-Q1 price to €84.00")
         AuditLog.objects.create(company=company, user=admin2, action="APPROVED", details="Michael Scott approved 2026-Q1 price at €84.00")
         AuditLog.objects.create(company=company, user=admin1, action="SAVED_ACTIVE", details="Sarah Connor directly set active price for 2026-Q2 to €86.50")

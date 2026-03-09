@@ -107,3 +107,54 @@ def review_assumption(request, assumption_id):
 def get_audit_logs(request):
     logs = AuditLog.objects.filter(company=request.user.company)[:50] # Get last 50
     return Response(AuditLogSerializer(logs, many=True).data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def rollover_year(request):
+    """
+    Called automatically on app load.
+    Averages the previous year's Q1-Q4 active assumptions and stores the
+    result as a single 'YYYY' period record. Idempotent — skips if already done.
+    """
+    from datetime import date
+    company = request.user.company
+    prev_year = date.today().year - 1
+
+    # Skip if rollover already done for this year
+    if CompanyAssumption.objects.filter(company=company, period=str(prev_year), status='ACTIVE').exists():
+        return Response({'rolled_over': False, 'reason': 'already_done'})
+
+    # Find active quarterly assumptions for the previous year
+    quarterly_periods = [f'{prev_year}-Q{q}' for q in range(1, 5)]
+    quarterly = CompanyAssumption.objects.filter(
+        company=company, period__in=quarterly_periods, status='ACTIVE'
+    )
+
+    if not quarterly.exists():
+        return Response({'rolled_over': False, 'reason': 'no_quarterly_data'})
+
+    prices = [float(a.price) for a in quarterly]
+    avg_price = round(sum(prices) / len(prices), 2)
+
+    _, created = CompanyAssumption.objects.get_or_create(
+        company=company,
+        period=str(prev_year),
+        status='ACTIVE',
+        defaults={
+            'price': avg_price,
+            'requested_by': request.user,
+            'approved_by': request.user,
+        },
+    )
+
+    if not created:
+        return Response({'rolled_over': False, 'reason': 'already_done'})
+
+    AuditLog.objects.create(
+        company=company,
+        user=request.user,
+        action='YEAR_ROLLOVER',
+        details=f"Averaged {len(prices)} quarterly prices for {prev_year} → €{avg_price}/t",
+    )
+
+    return Response({'rolled_over': True, 'year': prev_year, 'avg_price': avg_price})

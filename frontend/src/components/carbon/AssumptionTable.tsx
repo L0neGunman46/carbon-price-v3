@@ -4,7 +4,7 @@ import { submitAssumptions } from '../../api/carbonPrice'
 import type { MarketDataPoint } from '../../api/carbonPrice'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { PERIODS, formatPeriod, getAnalystPriceForPeriod } from '../../lib/carbonUtils'
+import { PERIODS, PREV_YEAR_PERIOD, formatPeriod, getAnalystPriceForPeriod } from '../../lib/carbonUtils'
 import { CheckCircle2, Clock } from 'lucide-react'
 
 interface Props {
@@ -29,6 +29,7 @@ export default function AssumptionTable({
 
   const fillFrom = (analystKey: string) => {
     for (const period of PERIODS) {
+      if (period === PREV_YEAR_PERIOD) continue
       const price = getAnalystPriceForPeriod(marketData, analystKey, period)
       if (price !== null) onPriceChange(period, price.toFixed(2))
     }
@@ -36,7 +37,7 @@ export default function AssumptionTable({
 
   const handleSubmit = async () => {
     const payload = PERIODS
-      .filter((p) => draftPrices[p] && !isNaN(parseFloat(draftPrices[p])))
+      .filter((p) => p !== PREV_YEAR_PERIOD && draftPrices[p] && !isNaN(parseFloat(draftPrices[p])))
       .map((p) => ({ period: p, price: parseFloat(draftPrices[p]) }))
 
     if (payload.length === 0) {
@@ -100,12 +101,18 @@ export default function AssumptionTable({
           </thead>
           <tbody className="divide-y divide-gray-50">
             {PERIODS.map((period) => {
+              const isPrevYear = period === PREV_YEAR_PERIOD
               const analystPrices = ANALYSTS.map(({ key }) =>
                 getAnalystPriceForPeriod(marketData, key, period)
               )
               return (
-                <tr key={period} className="hover:bg-[#edebef] transition-colors">
-                  <td className="py-2 pr-4 font-medium text-gray-800">{formatPeriod(period)}</td>
+                <tr key={period} className={`transition-colors ${isPrevYear ? 'bg-gray-50 text-gray-400' : 'hover:bg-[#edebef]'}`}>
+                  <td className="py-2 pr-4 font-medium text-gray-800">
+                    <span>{formatPeriod(period)}</span>
+                    {isPrevYear && (
+                      <span className="ml-2 text-xs text-gray-400 font-normal">(historical)</span>
+                    )}
+                  </td>
                   {analystPrices.map((price, i) => (
                     <td
                       key={ANALYSTS[i].key}
@@ -116,20 +123,26 @@ export default function AssumptionTable({
                   ))}
                   <td className="py-2 pl-3">
                     <div className="flex justify-end">
-                      <div className="relative w-28">
-                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#181d1f] text-md pointer-events-none">
-                          €
+                      {isPrevYear ? (
+                        <span className="w-28 text-right text-sm text-gray-500 tabular-nums pr-1">
+                          {draftPrices[period] ? `€${parseFloat(draftPrices[period]).toFixed(2)}` : '—'}
                         </span>
-                        <Input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          value={draftPrices[period] ?? ''}
-                          onChange={(e) => onPriceChange(period, e.target.value)}
-                          className="pl-6 text-right text-sm h-8 hover:border-2 hover:border-purple-600"
-                          placeholder="0.00"
-                        />
-                      </div>
+                      ) : (
+                        <div className="relative w-28">
+                          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#181d1f] text-md pointer-events-none">
+                            €
+                          </span>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={draftPrices[period] ?? ''}
+                            onChange={(e) => onPriceChange(period, e.target.value)}
+                            className="pl-6 text-right text-sm h-8 hover:border-2 hover:border-purple-600"
+                            placeholder="0.00"
+                          />
+                        </div>
+                      )}
                     </div>
                   </td>
                 </tr>

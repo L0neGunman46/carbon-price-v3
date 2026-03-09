@@ -1,13 +1,20 @@
 import type { MarketDataPoint } from '../api/carbonPrice'
 
+const _currentYear = new Date().getFullYear()
+export const PREV_YEAR_PERIOD = String(_currentYear - 1)
+export const CURRENT_YEAR = _currentYear
+
 export const PERIODS = [
-  '2026-Q1', '2026-Q2', '2026-Q3', '2026-Q4',
-  '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034', '2035',
+  PREV_YEAR_PERIOD,
+  `${_currentYear}-Q1`, `${_currentYear}-Q2`, `${_currentYear}-Q3`, `${_currentYear}-Q4`,
+  ...Array.from({ length: 10 }, (_, i) => String(_currentYear + 1 + i)),
 ]
 
 const PERIOD_LABELS: Record<string, string> = {
-  '2026-Q1': 'Q1 2026', '2026-Q2': 'Q2 2026',
-  '2026-Q3': 'Q3 2026', '2026-Q4': 'Q4 2026',
+  [`${_currentYear}-Q1`]: `Q1 ${_currentYear}`,
+  [`${_currentYear}-Q2`]: `Q2 ${_currentYear}`,
+  [`${_currentYear}-Q3`]: `Q3 ${_currentYear}`,
+  [`${_currentYear}-Q4`]: `Q4 ${_currentYear}`,
 }
 
 export function formatPeriod(period: string) {

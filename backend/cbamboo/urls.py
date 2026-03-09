@@ -31,6 +31,7 @@ urlpatterns = [
     path('carbon-price/market-data/', views.get_market_data),
     path('carbon-price/assumptions/', views.company_assumptions_view),
     path('carbon-price/assumptions/active-prices/', views.get_active_company_prices),
+    path('carbon-price/assumptions/rollover/', views.rollover_year),
     path('carbon-price/assumptions/<int:assumption_id>/review/', views.review_assumption),
     path('carbon-price/audit-logs/', views.get_audit_logs),
 ]

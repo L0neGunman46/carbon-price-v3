@@ -52,3 +52,6 @@ export const reviewAssumption = (id: number, action: 'APPROVE' | 'REJECT') =>
 
 export const getAuditLogs = () =>
   api.get<AuditLog[]>('/carbon-price/audit-logs/')
+
+export const triggerRollover = () =>
+  api.post('/carbon-price/assumptions/rollover/', {})

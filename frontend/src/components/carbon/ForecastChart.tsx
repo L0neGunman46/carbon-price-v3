@@ -197,23 +197,7 @@ export default function ForecastChart({
             tickFormatter={(v: string) => {
               const [year, month] = v.split("-");
               const m = parseInt(month, 10);
-              if (m === 1) return year;
-              if (m % 3 === 1)
-                return [
-                  "Jan",
-                  "",
-                  "",
-                  "Apr",
-                  "",
-                  "",
-                  "Jul",
-                  "",
-                  "",
-                  "Oct",
-                  "",
-                  "",
-                ][m - 1];
-              return "";
+              return m === 1 ? year : "";
             }}
             interval={0}
             angle={-45}

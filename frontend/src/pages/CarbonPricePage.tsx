@@ -4,7 +4,7 @@ import ForecastChart from "../components/carbon/ForecastChart";
 import AssumptionTable from "../components/carbon/AssumptionTable";
 import AdminPanel from "../components/carbon/AdminPanel";
 import AuditLogDrawer from "../components/carbon/AuditLogDrawer";
-import { getMarketData, getAssumptions } from "../api/carbonPrice";
+import { getMarketData, getAssumptions, triggerRollover } from "../api/carbonPrice";
 import type { MarketDataPoint, CompanyAssumption } from "../api/carbonPrice";
 import { PERIODS, getAnalystPriceForPeriod } from "../lib/carbonUtils";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -45,7 +45,11 @@ export default function CarbonPricePage() {
   };
 
   useEffect(() => {
-    loadData();
+    const init = async () => {
+      try { await triggerRollover() } catch { /* silent — rollover already done or no data */ }
+      loadData()
+    }
+    init()
   }, []);
 
   const handleSelectForecast = (source: string) => {
