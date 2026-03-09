@@ -36,7 +36,7 @@ export default function AdminPanel({ pending, onReviewSuccess }: Props) {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-100">
-            <th className="text-left py-2 pr-4 text-xs font-medium text-gray-500">Period</th>
+            <th className="text-left py-2 pr-4 text-md font-bold text-[#181d1f]">Period</th>
             <th className="text-right py-2 px-3 text-xs font-medium text-gray-500">Proposed (€/t)</th>
             <th className="text-left py-2 px-3 text-xs font-medium text-gray-500">Requested By</th>
             <th className="text-left py-2 px-3 text-xs font-medium text-gray-500">Submitted</th>

@@ -75,7 +75,7 @@ export default function AssumptionTable({
         </div>
         <div className="flex gap-2">
           {ANALYSTS.map(({ key, label }) => (
-            <Button key={key} variant="outline" size="xs" onClick={() => fillFrom(key)}>
+            <Button key={key} variant="outline" size="xs" onClick={() => fillFrom(key)} className='bg-[#edebef]'>
               Use {label}
             </Button>
           ))}
@@ -87,13 +87,13 @@ export default function AssumptionTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left py-2.5 pr-4 text-xs font-medium text-gray-500 w-28">Period</th>
+              <th className="text-left py-2.5 pr-4 text-md font-medium text-[#181d1f] w-28">Period</th>
               {ANALYSTS.map(({ label }) => (
-                <th key={label} className="text-right py-2.5 px-3 text-xs font-medium text-gray-400 w-28">
+                <th key={label} className="text-right py-2.5 px-3 text-md font-medium text-[#181d1f] w-28">
                   {label} (€/t)
                 </th>
               ))}
-              <th className="text-right py-2.5 pl-3 text-xs font-semibold text-gray-700 w-36">
+              <th className="text-right py-2.5 pl-3 text-md font-semibold text-[#181d1f] w-36">
                 Your Price (€/t)
               </th>
             </tr>
@@ -104,12 +104,12 @@ export default function AssumptionTable({
                 getAnalystPriceForPeriod(marketData, key, period)
               )
               return (
-                <tr key={period} className="hover:bg-gray-50 transition-colors">
+                <tr key={period} className="hover:bg-[#edebef] transition-colors">
                   <td className="py-2 pr-4 font-medium text-gray-800">{formatPeriod(period)}</td>
                   {analystPrices.map((price, i) => (
                     <td
                       key={ANALYSTS[i].key}
-                      className="py-2 px-3 text-right text-gray-400 tabular-nums"
+                      className="py-2 px-3 text-right text-[#181d1f] tabular-nums"
                     >
                       {price !== null ? `€${price.toFixed(2)}` : '—'}
                     </td>
@@ -117,7 +117,7 @@ export default function AssumptionTable({
                   <td className="py-2 pl-3">
                     <div className="flex justify-end">
                       <div className="relative w-28">
-                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none">
+                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#181d1f] text-md pointer-events-none">
                           €
                         </span>
                         <Input
@@ -126,7 +126,7 @@ export default function AssumptionTable({
                           step="0.01"
                           value={draftPrices[period] ?? ''}
                           onChange={(e) => onPriceChange(period, e.target.value)}
-                          className="pl-6 text-right text-sm h-8"
+                          className="pl-6 text-right text-sm h-8 hover:border-2 hover:border-purple-600"
                           placeholder="0.00"
                         />
                       </div>
