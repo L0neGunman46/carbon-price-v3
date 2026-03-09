@@ -2,14 +2,10 @@ import { Outlet, NavLink, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import {
   Home,
-  Truck,
   Package,
-  BarChart3,
-  ShoppingCart,
   LogOut,
   ChevronDown,
   Bell,
-  MessageSquare,
   Building2,
   Earth,
   Layers,
@@ -19,8 +15,6 @@ import {
   BanknoteArrowDown,
   ReceiptText,
   FileChartColumnIncreasing,
-  Ellipse,
-  EllipseIcon,
   Ellipsis,
   MessageSquarePlus,
 } from "lucide-react";
@@ -107,9 +101,9 @@ export default function AppShell() {
                 key={label}
                 to={path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
+                  `flex items-center gap-3 px-3 py-2.5 rounded-md text-sm border-2 border-transparenttransition-colors ${
                     isActive
-                      ? "bg-[#ffa574] text-[#270117] font-medium"
+                      ? "bg-[#ffa574] text-[#270117] font-medium border-[#6d1d8e]"
                       : "text-[#fff9ff hover:bg-white/10 hover:text-white"
                   }`
                 }

@@ -157,7 +157,7 @@ export default function AssumptionTable({
           <Button
             onClick={handleSubmit}
             disabled={submitting}
-            className="bg-[#ffa574] hover:bg-orange-600 text-[#270117]"
+            className="bg-[#ffa574] hover:bg-[#ffa574] hover:border-2  hover:border-[#6d1d8e] text-[#270117]"
           >
             {submitting ? 'Saving...' : isAdmin ? 'Save & Activate' : 'Submit for Approval'}
           </Button>
