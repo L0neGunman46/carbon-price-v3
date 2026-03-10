@@ -4,7 +4,11 @@ import ForecastChart from "../components/carbon/ForecastChart";
 import AssumptionTable from "../components/carbon/AssumptionTable";
 import AdminPanel from "../components/carbon/AdminPanel";
 import AuditLogDrawer from "../components/carbon/AuditLogDrawer";
-import { getMarketData, getAssumptions, triggerRollover } from "../api/carbonPrice";
+import {
+  getMarketData,
+  getAssumptions,
+  triggerRollover,
+} from "../api/carbonPrice";
 import type { MarketDataPoint, CompanyAssumption } from "../api/carbonPrice";
 import { PERIODS, getAnalystPriceForPeriod } from "../lib/carbonUtils";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -46,10 +50,14 @@ export default function CarbonPricePage() {
 
   useEffect(() => {
     const init = async () => {
-      try { await triggerRollover() } catch { /* silent — rollover already done or no data */ }
-      loadData()
-    }
-    init()
+      try {
+        await triggerRollover();
+      } catch {
+        /* silent — rollover already done or no data */
+      }
+      loadData();
+    };
+    init();
   }, []);
 
   const handleSelectForecast = (source: string) => {
@@ -81,8 +89,9 @@ export default function CarbonPricePage() {
             {/* Relative wrapper for the popover positioning  */}
             <div className="relative">
               <button
+                title="Click Me!"
                 onClick={() => setIsLearnMoreOpen(!isLearnMoreOpen)}
-                className="flex items-center gap-1 rounded-md bg-[#edebef] px-3 py-1 text-md font-bold text-gray-700 transition-colors hover:bg-gray-200"
+                className="flex items-center gap-1 rounded-md bg-[#edebef] px-3 py-1 text-md font-bold cursor-pointer text-gray-700 transition-colors hover:bg-gray-200"
               >
                 Learn more
                 {isLearnMoreOpen ? (

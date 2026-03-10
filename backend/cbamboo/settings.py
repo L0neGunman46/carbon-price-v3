@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'carbon_price',
     'rest_framework',
     'corsheaders',
-    'users'
+    'users',
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -92,6 +93,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cbamboo.wsgi.application'
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
