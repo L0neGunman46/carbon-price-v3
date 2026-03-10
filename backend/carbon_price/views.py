@@ -8,7 +8,7 @@ from .serializers import MarketDataSerializer, CompanyAssumptionSerializer, Audi
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_me(request):
-    """Returns current user context for the frontend"""
+    # Returns current user context for the frontend
     return Response({
         "username": request.user.username,
         "role": request.user.role,
@@ -24,7 +24,7 @@ def get_market_data(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_active_company_prices(request):
-    """EXPOSED API for Monthly Reports & other screens"""
+    # EXPOSED API for Monthly Reports & other screens
     active = CompanyAssumption.objects.filter(company=request.user.company, status='ACTIVE')
     price_map = {item.period: float(item.price) for item in active}
     return Response(price_map)
@@ -111,11 +111,7 @@ def get_audit_logs(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def rollover_year(request):
-    """
-    Called automatically on app load.
-    Averages the previous year's Q1-Q4 active assumptions and stores the
-    result as a single 'YYYY' period record. Idempotent — skips if already done.
-    """
+    # Automatic calling and takes the quater of the previous year and averages them.
     from datetime import date
     company = request.user.company
     prev_year = date.today().year - 1
