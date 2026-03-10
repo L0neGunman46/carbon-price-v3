@@ -43,7 +43,12 @@ export default function AuditLogDrawer() {
   return (
     <Sheet onOpenChange={handleOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" className="gap-2 hover:bg-[#eee7f3]/50 border-2 border-[#6d1d8e]" size={"lg"}>
+        <Button
+          variant="outline"
+          className="gap-2 hover:bg-[#eee7f3]/50 border-2 border-[#6d1d8e] cursor-pointer"
+          title="Click Me!"
+          size={"lg"}
+        >
           <div className="bg-[#e0d0e6] text-[#6d1d8e] p-1.5 rounded">
             <ClipboardList className="w-4 h-4" />
           </div>

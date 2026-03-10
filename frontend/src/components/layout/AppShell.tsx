@@ -159,7 +159,8 @@ export default function AppShell() {
             <Button
               variant="ghost"
               size="icon-xs"
-              className="text-white/40 hover:text-white hover:bg-white/10"
+              title="Logout!"
+              className="text-white/40 hover:text-white hover:bg-white/10 cursor-pointer"
               onClick={() => {
                 logout();
                 navigate("/login");
