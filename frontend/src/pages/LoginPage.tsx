@@ -31,7 +31,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-orange-500 tracking-tight">CBAMBOO</h1>
+          <h1 className="text-4xl font-bold text-[#ffa574] tracking-tight">CBAMBOO</h1>
           <p className="text-sm text-gray-500 mt-1">Sign in to your account</p>
         </div>
 
